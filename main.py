@@ -77,7 +77,6 @@ def conf():
     debug = input("debug acilsin mi???? (y/n): ").strip().lower() == "y"
     data['debug'] = debug
 
-    # İş parçacığı sayısını sor
     thread_count = input("kac thread kullanmak istersn (def: 30): ")
     if thread_count.isdigit():
         data['thread_count'] = int(thread_count)
