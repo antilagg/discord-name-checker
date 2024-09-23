@@ -36,4 +36,5 @@ yazilimi acinca istenecek bilgiler:
 ## not
 
 - residential proxy kullanmaniz sart.
+- renkleri bozuk goruyorsanız microsoft store'den Windows Terminal diye aratıp indirin o terminali kullanin.
 - used.txt dosyasin da benim checklediklerim var silmeyin o isimleri tekrar uretmesin diye
