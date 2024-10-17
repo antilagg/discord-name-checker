@@ -33,7 +33,7 @@ the script will prompt for the following information:
 - Residential proxy information
 - Webhook URL (optional)
 
-## notesz
+## notes
 
-- Residential proxy usage is required.
-- Do not delete the `used.txt` file; it contains the usernames I've already checked to avoid generating them again.
+- residential proxy kullanmaniz sart.
+- used.txt dosyasin da benim checklediklerim var silmeyin o isimleri tekrar uretmesin diye
