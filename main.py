@@ -15,28 +15,28 @@ tryed = set()
 def conf():
     data = {}
 
-    log.info("cfg olustr")
+    log.info("cfg gen")
 
-    proxyval = input("prefix girin > (uretecegi isimlerin basin da veya sonun da olacak harf) (bos birakabilirsn): ")
+    proxyval = input("enter prefix > (the letter that will be at the beginning or at the end of the names it will produce) (you can leave it blank): ")
     if proxyval == "":
         data['prefix'] = {
             'deger': None,
             'pos': None
         }
     else:
-        posi = input("prefixin basta mi olsun sonda mi? (start/end): ").strip().lower()
+        posi = input("should your prefix be at the beginning or at the end (start/end): ").strip().lower()
         while posi not in ["start", "end"]:
-            log.fatal("gecersiz bir sey yazdin, lutfen 'start' ya da 'end' yaz.")
-            posi = input("prefix bsata mi olsun sonda mi? (start/end): ").strip().lower()
+            log.fatal("if you have typed something invalid, please type 'start' or 'end'.")
+            posi = input("prefix at the beginning or at the end? (start/end): ").strip().lower()
 
         data['prefix'] = {
             'deger': proxyval,
             'pos': posi
         }
 
-    uzunlk = int(input("uretilen ismin uzunlugu kac olsun?: "))
-    sayi = input("kullanici adin da sayilar olsun mu? (y/n): ").strip().lower() == "y"
-    ozel = input("kullanici adin da ozel karakterler olsun mu? (y/n): ").strip().lower() == "y"
+    uzunlk = int(input("how long should the generated name be ??: "))
+    sayi = input("do you want numbers in your username ? (y/n): ").strip().lower() == "y"
+    ozel = input("do you want special characters in your username ?? (y/n): ").strip().lower() == "y"
 
     data['isimgen'] = {
         'uzunluk': uzunlk,
@@ -44,9 +44,9 @@ def conf():
         'ozelkarakter': ozel
     }
 
-    proxykullan = input("proxy kullanmak ister misin (residential)? (y/n): ").strip().lower()
+    proxykullan = input("do you want to use a proxy (residential)? (y/n): ").strip().lower()
     if proxykullan == "y":
-        format = input("proxy formati 'username:password@ip:port' seklin de olmali proxy bilgilerini gir: ").strip()
+        format = input("proxy format should be 'username:password@ip:port' enter proxy information: ").strip()
         if format:
             try:
                 parts = format.split('@')
@@ -60,13 +60,13 @@ def conf():
                     "port": int(proxy_port)
                 }
             except ValueError:
-                log.fatal("gecersiz proxy formati girdin proxy formati 'username:password@ip:port' seklin de olmali.")
+                log.fatal("you entered an invalid proxy format, the proxy format should be 'username:password@ip:port'.")
                 return
         else:
-            log.fatal("proxy bilgileri eksik seks!")
+            log.fatal("proxy information missing sex!")
             return
     else:
-        log.fatal("premium proxy kullanmadan devam edemen")
+        log.fatal("you can't continue without a premium proxy")
         return
 
     webhook = input("webhook gir: ").strip()
@@ -74,20 +74,21 @@ def conf():
         'url': webhook
     }
 
-    debug = input("debug acilsin mi???? (y/n): ").strip().lower() == "y"
+    debug = input("should debug be enabled ???? (y/n): ").strip().lower() == "y"
     data['debug'] = debug
 
-    thread_count = input("kac thread kullanmak istersn (def: 30): ")
+    thread_count = input("enter threadd (def: 30): ")
     if thread_count.isdigit():
         data['thread_count'] = int(thread_count)
     else:
-        log.info("gecersiz deger girdin varsayilan olarak 30 kullanilacak.")
+        log.info("you entered an invalid value 30 will be used by default.")
         data['thread_count'] = 30
 
     with open('config.yaml', 'w') as file:
         yaml.dump(data, file)
 
-    log.info("dosya olusturld.")
+    log.info("cfg createdz")
+    os.system("cls")
 
 def cfgload():
     if not os.path.exists('config.yaml'):
@@ -115,7 +116,7 @@ def isimgen(prefix, total_uzunlk, posi):
         return ''.join(random.choices(chrset, k=total_uzunlk))
 
     if len(prefix) > total_uzunlk:
-        raise ValueError(f"prefix uzunlugu isim uzunlugundan fazla olamaz > prefix uzunlugun:({len(prefix)}) - > isim uzunlugun({total_uzunlk}).")
+        raise ValueError(f"prefix length cannot be longer than name length > prefix length:({len(prefix)}) - > name length({total_length}).")
 
     kalanuzunluk = total_uzunlk - len(prefix)
 
@@ -137,11 +138,11 @@ def send(message):
         with httpx.Client() as client:
             response = client.post(webhook, json=payload)
             if response.status_code == 204:
-                log.success(f">>>>>>>>>>>>>>>>>> webhook'a gonderdim: {message}")
+                log.success(f">>>>>>>>>>>>>>>>>> SENDED WEBHOOK: {message}")
             else:
                 log.error(f"hata: {response.text}")
     except Exception as e:
-        log.error(f"hata2: {e}")
+        log.error(f"err2: {e}")
 
 def load_used_usernames():
     if os.path.exists('used.txt'):
@@ -166,14 +167,14 @@ def thr():
             "https://": proxy_url
         }
     else:
-        log.fatal("proxy bilgileri eksik seks!!!")
+        log.fatal("proxy information missing sex!!!")
         return
 
     debug = config['debug']
 
     try:
         if prefix and len(prefix) > total_uzunlk:
-            raise ValueError(f"prefix uzunlugu isim uzunlugundan fazla olamaz > prefix uzunlugun:({len(prefix)}) - > isim uzunlugun({total_uzunlk}).")
+            raise ValueError(f"prefix length cannot be longer than name length > prefix length:({len(prefix)}) - > name length({total_length}).")
 
         while True:
             try:
@@ -207,21 +208,21 @@ def thr():
                                     file.write(userx + '\n')
                             else:
                                 log.success(f'NOTTAKENN ---------> {userx} -> {xr.text}')
-                                send(f"alinabilir isim: {userx}")
+                                send(f"available nick: {userx}")
                         else:
-                            log.fatal(f"hatali yanit > {xr.text}")
+                            log.fatal(f"error > {xr.text}")
                     elif xr.status_code == 429:
                         deneme = xr.json().get("retry_after", 1)
-                        log.fatal(f"rate yedik sonra tekrar denersin {deneme} saniye..")
+                        log.fatal(f"rated {deneme} then try again")
                         time.sleep(deneme)
                     else:
-                        log.error(f"hata3: {xr.status_code} -> {xr.text}")
+                        log.error(f"err3: {xr.status_code} -> {xr.text}")
 
                 except Exception as e:
                     log.error(f"{e}")
 
             except ValueError as ve:
-                log.error(f"isim uretilirken hata: {ve}")
+                log.error(f"error generating name: {ve}")
                 break
 
     except ValueError as e:

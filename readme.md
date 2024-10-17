@@ -1,39 +1,39 @@
 # discord nick checker
 
-bu basit kod rastgele discord kullanici adlari olusturur ve bu adlarin kullanilabilir olup olmadigini kontrol eder
+this simple script generates random Discord usernames and checks if they are available.
 
-## kutuphaneler
+## lib
 
 - `httpx`
 - `PyYAML`
 - `pyopenssl`
 - `extvip`
 
-## kurulum
+## installation
 
-1. kutuphaneleri yuklemek icin:
+1. to install the required libraries:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-2. calistir:
+2. run the sc:
 
     ```bash
     python main.py
     ```
 
-## config
+## cfg
 
-yazilimi acinca istenecek bilgiler:
+the script will prompt for the following information:
 
-- prefix
-- kullanici adi uzunlugu
-- sayilar ve ozel karakterler
-- residential proxy bilgisi
-- webhook url (opt)
+- Prefix
+- Username length
+- Numbers and special characters
+- Residential proxy information
+- Webhook URL (optional)
 
-## not
+## notesz
 
-- residential proxy kullanmaniz sart.
-- used.txt dosyasin da benim checklediklerim var silmeyin o isimleri tekrar uretmesin diye
+- Residential proxy usage is required.
+- Do not delete the `used.txt` file; it contains the usernames I've already checked to avoid generating them again.
