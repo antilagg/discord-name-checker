@@ -35,5 +35,5 @@ the script will prompt for the following information:
 
 ## notes
 
-- residential proxy kullanmaniz sart.
-- used.txt dosyasin da benim checklediklerim var silmeyin o isimleri tekrar uretmesin diye
+- Residential proxy usage is required.
+- Do not delete the `used.txt` file; it contains the usernames I've already checked to avoid generating them again.
