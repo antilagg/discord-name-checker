@@ -2,12 +2,14 @@ import itertools
 import string
 import threading
 import ssl
-import httpx
+import requests
 import time
 import yaml
 import os
 import random
 from extvip import log, inputf as input, printf as printf
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 lock = threading.Lock()
 tryed = set()
@@ -105,7 +107,7 @@ def setolustur():
         chrset += list(string.digits)
 
     if config['isimgen']['ozelkarakter']:
-        chrset += ["_", "."]
+        chrset += [".", "."]
 
     return chrset
 
@@ -135,18 +137,17 @@ def send(message):
         "content": message
     }
     try:
-        with httpx.Client() as client:
-            response = client.post(webhook, json=payload)
-            if response.status_code == 204:
-                log.success(f">>>>>>>>>>>>>>>>>> SENDED WEBHOOK: {message}")
-            else:
-                log.error(f"hata: {response.text}")
+        response = requests.post(webhook, json=payload)
+        if response.status_code == 204:
+            log.success(f">>>>>>>>>>>>>>>>>> SENDED WEBHOOK: {message}")
+        else:
+            log.error(f"hata: {response.text}")
     except Exception as e:
         log.error(f"err2: {e}")
 
 def load_used_usernames():
-    if os.path.exists('used.txt'):
-        with open('used.txt', 'r') as file:
+    if os.path.exists('nicks.txt'):
+        with open('nicks.txt', 'r') as file:
             return set(file.read().splitlines())
     return set()
 
@@ -163,8 +164,8 @@ def thr():
     if proxcfg['username'] and proxcfg['address']:
         proxy_url = f"http://{proxcfg['username']}:{proxcfg['password']}@{proxcfg['address']}:{proxcfg['port']}"
         proxies = {
-            "http://": proxy_url,
-            "https://": proxy_url
+            "http": proxy_url,
+            "https": proxy_url
         }
     else:
         log.fatal("proxy information missing sex!!!")
@@ -195,16 +196,21 @@ def thr():
                 pys = {"username": userx}
 
                 try:
-                    with httpx.Client(proxies=proxies, verify=ssl_context) as client:
-                        xr = client.post('https://discord.com/api/v9/unique-username/username-attempt-unauthed',
-                                         json=pys)
+                    response = requests.post(
+                        'https://discord.com/api/v9/unique-username/username-attempt-unauthed',
+                        json=pys,
+                        proxies=proxies,
+                        verify=False,
+                        timeout=30
+                    )
+                    xr = response
 
                     if xr.status_code == 200:
                         response_json = xr.json()
                         if 'taken' in response_json:
                             if response_json['taken']:
                                 log.info(f'taken --> {userx} -> {xr.text}')
-                                with open('used.txt', 'a') as file:
+                                with open('nicks.txt', 'a') as file:
                                     file.write(userx + '\n')
                             else:
                                 log.success(f'NOTTAKENN ---------> {userx} -> {xr.text}')
@@ -218,8 +224,10 @@ def thr():
                     else:
                         log.error(f"err3: {xr.status_code} -> {xr.text}")
 
-                except Exception as e:
+                except requests.exceptions.RequestException as e:
                     log.error(f"{e}")
+                    time.sleep(5)
+                    continue
 
             except ValueError as ve:
                 log.error(f"error generating name: {ve}")
