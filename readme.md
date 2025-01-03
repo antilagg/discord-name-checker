@@ -4,7 +4,7 @@ this simple script generates random Discord usernames and checks if they are ava
 
 ## lib
 
-- `httpx`
+- `requests`
 - `PyYAML`
 - `pyopenssl`
 - `extvip`
