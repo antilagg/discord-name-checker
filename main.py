@@ -68,8 +68,7 @@ def conf():
             log.fatal("proxy information missing sex!")
             return
     else:
-        log.fatal("you can't continue without a premium proxy")
-        return
+        data['proxy'] = None
 
     webhook = input("webhook gir: ").strip()
     data['webhook'] = {
@@ -86,7 +85,7 @@ def conf():
         log.info("you entered an invalid value 30 will be used by default.")
         data['thread_count'] = 30
 
-    with open('config.yaml', 'w') as file:
+    with open('config.yaml', 'w', encoding='utf-8') as file:
         yaml.dump(data, file)
 
     log.info("cfg createdz")
@@ -95,7 +94,7 @@ def conf():
 def cfgload():
     if not os.path.exists('config.yaml'):
         conf()
-    with open('config.yaml', 'r') as file:
+    with open('config.yaml', 'r', encoding='utf-8') as file:
         return yaml.safe_load(file)
 
 config = cfgload()
